@@ -1,5 +1,6 @@
 package com.qcom.imagesuperres;
 
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -62,77 +63,80 @@ public class SNPEActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_snpe);
-        rb1 = (RadioButton) findViewById(R.id.rb1);
-        rb2 = (RadioButton) findViewById(R.id.rb2);
-        rb3 = (RadioButton) findViewById(R.id.rb3);
-        txt4 = (TextView) findViewById(R.id.textView4);
-        imageView = (ImageView) findViewById(R.id.im1);
-        imageView2 = (ImageView) findViewById(R.id.im2);
-        radioGroup = (RadioGroup) findViewById(R.id.rg1);
-        spin = (Spinner) findViewById((R.id.spinner));
+         SuperResolution sr = new SuperResolution();
+         sr.initializingModel(this, "SuperResolution_sesr", "CPU");
 
-        ArrayAdapter ad = new ArrayAdapter(this, android.R.layout.simple_spinner_item, options);
-        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(ad);
-
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                radioGroup.clearCheck();
-                Toast.makeText(getApplicationContext(), options[position], Toast.LENGTH_SHORT).show();
-                // loading picture from assets...
-                if (!parent.getItemAtPosition(position).equals("No Selection")) {//if no selection of image
-                    imageView2.setImageResource(R.drawable.ic_launcher_background);
-                    txt4.setText("Stats");
-                    try {
-                        originalFile = getAssets().open((String) parent.getItemAtPosition(position));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Convert input image to Bitmap
-                    bmps = BitmapFactory.decodeStream(originalFile);
-                    Bitmap scaled1 = Bitmap.createScaledBitmap(bmps, 128, 128, true);
-                    try {
-                        // Set the input image in UI view
-                        imageView.setImageBitmap(scaled1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    int checkedID_RB = radioGroup.getCheckedRadioButtonId();
-                    if (originalFile!=null && bmps!=null && checkedID_RB !=-1){
-                        executeRadioButton(checkedID_RB);
-                    }
-                    // Lister to check the change in HW accelerator input in APP UI
-                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            if (originalFile!=null && bmps!=null){
-                                executeRadioButton(checkedId);
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(), "Please select image first", Toast.LENGTH_SHORT).show();
-                                System.out.println("Tag2");
-                            }
-                        }
-                    });
-                }
-                else{
-                    originalFile=null;
-                    bmps=null;
-                    imageView.setImageResource(R.drawable.ic_launcher_background);
-                    imageView2.setImageResource(R.drawable.ic_launcher_background);
-                    txt4.setText("Stats");
-                    radioGroup.clearCheck();
-                    System.out.println("Tag3");
-                    Toast.makeText(getApplicationContext(), "Please select image first", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                System.out.println("Nothing");
-            }
-        });
+//        rb1 = (RadioButton) findViewById(R.id.rb1);
+//        rb2 = (RadioButton) findViewById(R.id.rb2);
+//        rb3 = (RadioButton) findViewById(R.id.rb3);
+//        txt4 = (TextView) findViewById(R.id.textView4);
+//        imageView = (ImageView) findViewById(R.id.im1);
+//        imageView2 = (ImageView) findViewById(R.id.im2);
+//        radioGroup = (RadioGroup) findViewById(R.id.rg1);
+//        spin = (Spinner) findViewById((R.id.spinner));
+//
+//        ArrayAdapter ad = new ArrayAdapter(this, android.R.layout.simple_spinner_item, options);
+//        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spin.setAdapter(ad);
+//
+//        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+////                radioGroup.clearCheck();
+//                Toast.makeText(getApplicationContext(), options[position], Toast.LENGTH_SHORT).show();
+//                // loading picture from assets...
+//                if (!parent.getItemAtPosition(position).equals("No Selection")) {//if no selection of image
+//                    imageView2.setImageResource(R.drawable.ic_launcher_background);
+//                    txt4.setText("Stats");
+//                    try {
+//                        originalFile = getAssets().open((String) parent.getItemAtPosition(position));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    // Convert input image to Bitmap
+//                    bmps = BitmapFactory.decodeStream(originalFile);
+//                    Bitmap scaled1 = Bitmap.createScaledBitmap(bmps, 128, 128, true);
+//                    try {
+//                        // Set the input image in UI view
+//                        imageView.setImageBitmap(scaled1);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    int checkedID_RB = radioGroup.getCheckedRadioButtonId();
+//                    if (originalFile!=null && bmps!=null && checkedID_RB !=-1){
+//                        executeRadioButton(checkedID_RB);
+//                    }
+//                    // Lister to check the change in HW accelerator input in APP UI
+//                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                        @Override
+//                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                            if (originalFile!=null && bmps!=null){
+//                                executeRadioButton(checkedId);
+//                            }
+//                            else{
+//                                Toast.makeText(getApplicationContext(), "Please select image first", Toast.LENGTH_SHORT).show();
+//                                System.out.println("Tag2");
+//                            }
+//                        }
+//                    });
+//                }
+//                else{
+//                    originalFile=null;
+//                    bmps=null;
+//                    imageView.setImageResource(R.drawable.ic_launcher_background);
+//                    imageView2.setImageResource(R.drawable.ic_launcher_background);
+//                    txt4.setText("Stats");
+//                    radioGroup.clearCheck();
+//                    System.out.println("Tag3");
+//                    Toast.makeText(getApplicationContext(), "Please select image first", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                System.out.println("Nothing");
+//            }
+//        });
     }
 
     public Result<SuperResolutionResult> process(Bitmap bmps, String run_time){
